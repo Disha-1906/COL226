@@ -1,0 +1,2201 @@
+
+state 0:
+
+	start : . blk 
+
+	TOKEN_INTEGER	shift 10
+	TOKEN_BOOL	shift 9
+	TOKEN_LBRACE	reduce by rule 5
+	TOKEN_RATIONAL	shift 8
+	TOKEN_PROCEDURE	shift 7
+
+	start	goto 98
+	blk	goto 6
+	decseq	goto 5
+	typedec	goto 4
+	procdec	goto 3
+	procdef	goto 2
+	vardec	goto 1
+
+	.	error
+
+
+state 1:
+
+	decseq : vardec . procdec 
+	decseq : vardec .  (reduce by rule 3)
+
+	TOKEN_LBRACE	reduce by rule 3
+	TOKEN_PROCEDURE	shift 7
+
+	procdec	goto 11
+	procdef	goto 2
+
+	.	error
+
+
+state 2:
+
+	procdec : procdef . TOKEN_SEMICOLON procdeclist 
+
+	TOKEN_SEMICOLON	shift 12
+
+
+	.	error
+
+
+state 3:
+
+	decseq : procdec .  (reduce by rule 4)
+
+	TOKEN_LBRACE	reduce by rule 4
+
+
+	.	error
+
+
+state 4:
+
+	vardec : typedec . varlist TOKEN_SEMICOLON 
+
+	TOKEN_IDENT	shift 14
+
+	varlist	goto 13
+
+	.	error
+
+
+state 5:
+
+	blk : decseq . cmdseq 
+
+	TOKEN_LBRACE	shift 16
+
+	cmdseq	goto 15
+
+	.	error
+
+
+state 6:
+
+	start : blk .  (reduce by rule 0)
+
+	TOKEN_EOF	reduce by rule 0
+
+
+	.	error
+
+
+state 7:
+
+	procdef : TOKEN_PROCEDURE . TOKEN_IDENT blk 
+
+	TOKEN_IDENT	shift 17
+
+
+	.	error
+
+
+state 8:
+
+	typedec : TOKEN_RATIONAL .  (reduce by rule 15)
+
+	TOKEN_IDENT	reduce by rule 15
+
+
+	.	error
+
+
+state 9:
+
+	typedec : TOKEN_BOOL .  (reduce by rule 14)
+
+	TOKEN_IDENT	reduce by rule 14
+
+
+	.	error
+
+
+state 10:
+
+	typedec : TOKEN_INTEGER .  (reduce by rule 13)
+
+	TOKEN_IDENT	reduce by rule 13
+
+
+	.	error
+
+
+state 11:
+
+	decseq : vardec procdec .  (reduce by rule 2)
+
+	TOKEN_LBRACE	reduce by rule 2
+
+
+	.	error
+
+
+state 12:
+
+	procdec : procdef TOKEN_SEMICOLON . procdeclist 
+
+	TOKEN_SEMICOLON	reduce by rule 8
+	TOKEN_LBRACE	reduce by rule 8
+	TOKEN_PROCEDURE	shift 7
+
+	procdec	goto 19
+	procdef	goto 2
+	procdeclist	goto 18
+
+	.	error
+
+
+state 13:
+
+	vardec : typedec varlist . TOKEN_SEMICOLON 
+
+	TOKEN_SEMICOLON	shift 20
+
+
+	.	error
+
+
+state 14:
+
+	varlist : TOKEN_IDENT .  (reduce by rule 11)
+	varlist : TOKEN_IDENT . TOKEN_COMMA varlist 
+
+	TOKEN_SEMICOLON	reduce by rule 11
+	TOKEN_COMMA	shift 21
+
+
+	.	error
+
+
+state 15:
+
+	blk : decseq cmdseq .  (reduce by rule 1)
+
+	TOKEN_SEMICOLON	reduce by rule 1
+	TOKEN_EOF	reduce by rule 1
+
+
+	.	error
+
+
+state 16:
+
+	cmdseq : TOKEN_LBRACE . commands TOKEN_RBRACE 
+
+	TOKEN_READ	shift 29
+	TOKEN_IF	shift 28
+	TOKEN_WHILE	shift 27
+	TOKEN_RBRACE	reduce by rule 18
+	TOKEN_IDENT	shift 26
+	TOKEN_CALL	shift 25
+	TOKEN_PRINT	shift 24
+
+	commands	goto 23
+	command	goto 22
+
+	.	error
+
+
+state 17:
+
+	procdef : TOKEN_PROCEDURE TOKEN_IDENT . blk 
+
+	TOKEN_INTEGER	shift 10
+	TOKEN_BOOL	shift 9
+	TOKEN_LBRACE	reduce by rule 5
+	TOKEN_RATIONAL	shift 8
+	TOKEN_PROCEDURE	shift 7
+
+	blk	goto 30
+	decseq	goto 5
+	typedec	goto 4
+	procdec	goto 3
+	procdef	goto 2
+	vardec	goto 1
+
+	.	error
+
+
+state 18:
+
+	procdec : procdef TOKEN_SEMICOLON procdeclist .  (reduce by rule 6)
+
+	TOKEN_SEMICOLON	reduce by rule 6
+	TOKEN_LBRACE	reduce by rule 6
+
+
+	.	error
+
+
+state 19:
+
+	procdeclist : procdec . TOKEN_SEMICOLON procdeclist 
+
+	TOKEN_SEMICOLON	shift 31
+
+
+	.	error
+
+
+state 20:
+
+	vardec : typedec varlist TOKEN_SEMICOLON .  (reduce by rule 10)
+
+	TOKEN_LBRACE	reduce by rule 10
+	TOKEN_PROCEDURE	reduce by rule 10
+
+
+	.	error
+
+
+state 21:
+
+	varlist : TOKEN_IDENT TOKEN_COMMA . varlist 
+
+	TOKEN_IDENT	shift 14
+
+	varlist	goto 32
+
+	.	error
+
+
+state 22:
+
+	commands : command . TOKEN_SEMICOLON commands 
+
+	TOKEN_SEMICOLON	shift 33
+
+
+	.	error
+
+
+state 23:
+
+	cmdseq : TOKEN_LBRACE commands . TOKEN_RBRACE 
+
+	TOKEN_RBRACE	shift 34
+
+
+	.	error
+
+
+state 24:
+
+	command : TOKEN_PRINT . TOKEN_IDENT 
+
+	TOKEN_IDENT	shift 35
+
+
+	.	error
+
+
+state 25:
+
+	command : TOKEN_CALL . TOKEN_IDENT 
+
+	TOKEN_IDENT	shift 36
+
+
+	.	error
+
+
+state 26:
+
+	command : TOKEN_IDENT . TOKEN_ASSIGN expr 
+
+	TOKEN_ASSIGN	shift 37
+
+
+	.	error
+
+
+state 27:
+
+	command : TOKEN_WHILE . expr TOKEN_DO cmdseq TOKEN_OD 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 38
+
+	.	error
+
+
+state 28:
+
+	command : TOKEN_IF . expr TOKEN_THEN cmdseq TOKEN_ELSE cmdseq TOKEN_ENDIF 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 47
+
+	.	error
+
+
+state 29:
+
+	command : TOKEN_READ . TOKEN_IDENT 
+
+	TOKEN_IDENT	shift 48
+
+
+	.	error
+
+
+state 30:
+
+	procdef : TOKEN_PROCEDURE TOKEN_IDENT blk .  (reduce by rule 9)
+
+	TOKEN_SEMICOLON	reduce by rule 9
+
+
+	.	error
+
+
+state 31:
+
+	procdeclist : procdec TOKEN_SEMICOLON . procdeclist 
+
+	TOKEN_SEMICOLON	reduce by rule 8
+	TOKEN_LBRACE	reduce by rule 8
+	TOKEN_PROCEDURE	shift 7
+
+	procdec	goto 19
+	procdef	goto 2
+	procdeclist	goto 49
+
+	.	error
+
+
+state 32:
+
+	varlist : TOKEN_IDENT TOKEN_COMMA varlist .  (reduce by rule 12)
+
+	TOKEN_SEMICOLON	reduce by rule 12
+
+
+	.	error
+
+
+state 33:
+
+	commands : command TOKEN_SEMICOLON . commands 
+
+	TOKEN_READ	shift 29
+	TOKEN_IF	shift 28
+	TOKEN_WHILE	shift 27
+	TOKEN_RBRACE	reduce by rule 18
+	TOKEN_IDENT	shift 26
+	TOKEN_CALL	shift 25
+	TOKEN_PRINT	shift 24
+
+	commands	goto 50
+	command	goto 22
+
+	.	error
+
+
+state 34:
+
+	cmdseq : TOKEN_LBRACE commands TOKEN_RBRACE .  (reduce by rule 16)
+
+	TOKEN_ELSE	reduce by rule 16
+	TOKEN_ENDIF	reduce by rule 16
+	TOKEN_OD	reduce by rule 16
+	TOKEN_SEMICOLON	reduce by rule 16
+	TOKEN_EOF	reduce by rule 16
+
+
+	.	error
+
+
+state 35:
+
+	command : TOKEN_PRINT TOKEN_IDENT .  (reduce by rule 20)
+
+	TOKEN_SEMICOLON	reduce by rule 20
+
+
+	.	error
+
+
+state 36:
+
+	command : TOKEN_CALL TOKEN_IDENT .  (reduce by rule 22)
+
+	TOKEN_SEMICOLON	reduce by rule 22
+
+
+	.	error
+
+
+state 37:
+
+	command : TOKEN_IDENT TOKEN_ASSIGN . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 51
+
+	.	error
+
+
+state 38:
+
+	command : TOKEN_WHILE expr . TOKEN_DO cmdseq TOKEN_OD 
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	shift 58
+	TOKEN_OR	shift 57
+	TOKEN_DO	shift 56
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 39:
+
+	expr : TOKEN_R .  (reduce by rule 38)
+
+	TOKEN_PLUS	reduce by rule 38
+	TOKEN_MINUS	reduce by rule 38
+	TOKEN_MULTIPLY	reduce by rule 38
+	TOKEN_DIVIDE	reduce by rule 38
+	TOKEN_MOD	reduce by rule 38
+	TOKEN_EQUAL	reduce by rule 38
+	TOKEN_NE	reduce by rule 38
+	TOKEN_GT	reduce by rule 38
+	TOKEN_GTE	reduce by rule 38
+	TOKEN_LT	reduce by rule 38
+	TOKEN_LTE	reduce by rule 38
+	TOKEN_AND	reduce by rule 38
+	TOKEN_OR	reduce by rule 38
+	TOKEN_THEN	reduce by rule 38
+	TOKEN_DO	reduce by rule 38
+	TOKEN_SEMICOLON	reduce by rule 38
+	TOKEN_RPAREN	reduce by rule 38
+	TOKEN_RPLUS	reduce by rule 38
+	TOKEN_RMINUS	reduce by rule 38
+	TOKEN_RMULTIPLY	reduce by rule 38
+	TOKEN_RDIVIDE	reduce by rule 38
+
+
+	.	error
+
+
+state 40:
+
+	expr : TOKEN_NUM .  (reduce by rule 32)
+
+	TOKEN_PLUS	reduce by rule 32
+	TOKEN_MINUS	reduce by rule 32
+	TOKEN_MULTIPLY	reduce by rule 32
+	TOKEN_DIVIDE	reduce by rule 32
+	TOKEN_MOD	reduce by rule 32
+	TOKEN_EQUAL	reduce by rule 32
+	TOKEN_NE	reduce by rule 32
+	TOKEN_GT	reduce by rule 32
+	TOKEN_GTE	reduce by rule 32
+	TOKEN_LT	reduce by rule 32
+	TOKEN_LTE	reduce by rule 32
+	TOKEN_AND	reduce by rule 32
+	TOKEN_OR	reduce by rule 32
+	TOKEN_THEN	reduce by rule 32
+	TOKEN_DO	reduce by rule 32
+	TOKEN_SEMICOLON	reduce by rule 32
+	TOKEN_RPAREN	reduce by rule 32
+	TOKEN_RPLUS	reduce by rule 32
+	TOKEN_RMINUS	reduce by rule 32
+	TOKEN_RMULTIPLY	reduce by rule 32
+	TOKEN_RDIVIDE	reduce by rule 32
+
+
+	.	error
+
+
+state 41:
+
+	expr : TOKEN_IDENT .  (reduce by rule 25)
+
+	TOKEN_PLUS	reduce by rule 25
+	TOKEN_MINUS	reduce by rule 25
+	TOKEN_MULTIPLY	reduce by rule 25
+	TOKEN_DIVIDE	reduce by rule 25
+	TOKEN_MOD	reduce by rule 25
+	TOKEN_EQUAL	reduce by rule 25
+	TOKEN_NE	reduce by rule 25
+	TOKEN_GT	reduce by rule 25
+	TOKEN_GTE	reduce by rule 25
+	TOKEN_LT	reduce by rule 25
+	TOKEN_LTE	reduce by rule 25
+	TOKEN_AND	reduce by rule 25
+	TOKEN_OR	reduce by rule 25
+	TOKEN_THEN	reduce by rule 25
+	TOKEN_DO	reduce by rule 25
+	TOKEN_SEMICOLON	reduce by rule 25
+	TOKEN_RPAREN	reduce by rule 25
+	TOKEN_RPLUS	reduce by rule 25
+	TOKEN_RMINUS	reduce by rule 25
+	TOKEN_RMULTIPLY	reduce by rule 25
+	TOKEN_RDIVIDE	reduce by rule 25
+
+
+	.	error
+
+
+state 42:
+
+	expr : TOKEN_LPAREN . expr TOKEN_RPAREN 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 70
+
+	.	error
+
+
+state 43:
+
+	expr : TOKEN_FF .  (reduce by rule 49)
+
+	TOKEN_PLUS	reduce by rule 49
+	TOKEN_MINUS	reduce by rule 49
+	TOKEN_MULTIPLY	reduce by rule 49
+	TOKEN_DIVIDE	reduce by rule 49
+	TOKEN_MOD	reduce by rule 49
+	TOKEN_EQUAL	reduce by rule 49
+	TOKEN_NE	reduce by rule 49
+	TOKEN_GT	reduce by rule 49
+	TOKEN_GTE	reduce by rule 49
+	TOKEN_LT	reduce by rule 49
+	TOKEN_LTE	reduce by rule 49
+	TOKEN_AND	reduce by rule 49
+	TOKEN_OR	reduce by rule 49
+	TOKEN_THEN	reduce by rule 49
+	TOKEN_DO	reduce by rule 49
+	TOKEN_SEMICOLON	reduce by rule 49
+	TOKEN_RPAREN	reduce by rule 49
+	TOKEN_RPLUS	reduce by rule 49
+	TOKEN_RMINUS	reduce by rule 49
+	TOKEN_RMULTIPLY	reduce by rule 49
+	TOKEN_RDIVIDE	reduce by rule 49
+
+
+	.	error
+
+
+state 44:
+
+	expr : TOKEN_TT .  (reduce by rule 48)
+
+	TOKEN_PLUS	reduce by rule 48
+	TOKEN_MINUS	reduce by rule 48
+	TOKEN_MULTIPLY	reduce by rule 48
+	TOKEN_DIVIDE	reduce by rule 48
+	TOKEN_MOD	reduce by rule 48
+	TOKEN_EQUAL	reduce by rule 48
+	TOKEN_NE	reduce by rule 48
+	TOKEN_GT	reduce by rule 48
+	TOKEN_GTE	reduce by rule 48
+	TOKEN_LT	reduce by rule 48
+	TOKEN_LTE	reduce by rule 48
+	TOKEN_AND	reduce by rule 48
+	TOKEN_OR	reduce by rule 48
+	TOKEN_THEN	reduce by rule 48
+	TOKEN_DO	reduce by rule 48
+	TOKEN_SEMICOLON	reduce by rule 48
+	TOKEN_RPAREN	reduce by rule 48
+	TOKEN_RPLUS	reduce by rule 48
+	TOKEN_RMINUS	reduce by rule 48
+	TOKEN_RMULTIPLY	reduce by rule 48
+	TOKEN_RDIVIDE	reduce by rule 48
+
+
+	.	error
+
+
+state 45:
+
+	expr : TOKEN_NOT . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 71
+
+	.	error
+
+
+state 46:
+
+	expr : TOKEN_UMINUS . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 72
+
+	.	error
+
+
+state 47:
+
+	command : TOKEN_IF expr . TOKEN_THEN cmdseq TOKEN_ELSE cmdseq TOKEN_ENDIF 
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	shift 58
+	TOKEN_OR	shift 57
+	TOKEN_THEN	shift 73
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 48:
+
+	command : TOKEN_READ TOKEN_IDENT .  (reduce by rule 19)
+
+	TOKEN_SEMICOLON	reduce by rule 19
+
+
+	.	error
+
+
+state 49:
+
+	procdeclist : procdec TOKEN_SEMICOLON procdeclist .  (reduce by rule 7)
+
+	TOKEN_SEMICOLON	reduce by rule 7
+	TOKEN_LBRACE	reduce by rule 7
+
+
+	.	error
+
+
+state 50:
+
+	commands : command TOKEN_SEMICOLON commands .  (reduce by rule 17)
+
+	TOKEN_RBRACE	reduce by rule 17
+
+
+	.	error
+
+
+state 51:
+
+	command : TOKEN_IDENT TOKEN_ASSIGN expr .  (reduce by rule 21)
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	shift 58
+	TOKEN_OR	shift 57
+	TOKEN_SEMICOLON	reduce by rule 21
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 52:
+
+	expr : expr TOKEN_RDIVIDE . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 74
+
+	.	error
+
+
+state 53:
+
+	expr : expr TOKEN_RMULTIPLY . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 75
+
+	.	error
+
+
+state 54:
+
+	expr : expr TOKEN_RMINUS . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 76
+
+	.	error
+
+
+state 55:
+
+	expr : expr TOKEN_RPLUS . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 77
+
+	.	error
+
+
+state 56:
+
+	command : TOKEN_WHILE expr TOKEN_DO . cmdseq TOKEN_OD 
+
+	TOKEN_LBRACE	shift 16
+
+	cmdseq	goto 78
+
+	.	error
+
+
+state 57:
+
+	expr : expr TOKEN_OR . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 79
+
+	.	error
+
+
+state 58:
+
+	expr : expr TOKEN_AND . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 80
+
+	.	error
+
+
+state 59:
+
+	expr : expr TOKEN_LTE . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 81
+
+	.	error
+
+
+state 60:
+
+	expr : expr TOKEN_LT . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 82
+
+	.	error
+
+
+state 61:
+
+	expr : expr TOKEN_GTE . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 83
+
+	.	error
+
+
+state 62:
+
+	expr : expr TOKEN_GT . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 84
+
+	.	error
+
+
+state 63:
+
+	expr : expr TOKEN_NE . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 85
+
+	.	error
+
+
+state 64:
+
+	expr : expr TOKEN_EQUAL . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 86
+
+	.	error
+
+
+state 65:
+
+	expr : expr TOKEN_MOD . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 87
+
+	.	error
+
+
+state 66:
+
+	expr : expr TOKEN_DIVIDE . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 88
+
+	.	error
+
+
+state 67:
+
+	expr : expr TOKEN_MULTIPLY . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 89
+
+	.	error
+
+
+state 68:
+
+	expr : expr TOKEN_MINUS . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 90
+
+	.	error
+
+
+state 69:
+
+	expr : expr TOKEN_PLUS . expr 
+
+	TOKEN_UMINUS	shift 46
+	TOKEN_NOT	shift 45
+	TOKEN_TT	shift 44
+	TOKEN_FF	shift 43
+	TOKEN_LPAREN	shift 42
+	TOKEN_IDENT	shift 41
+	TOKEN_NUM	shift 40
+	TOKEN_R	shift 39
+
+	expr	goto 91
+
+	.	error
+
+
+state 70:
+
+	expr : TOKEN_LPAREN expr . TOKEN_RPAREN 
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	shift 58
+	TOKEN_OR	shift 57
+	TOKEN_RPAREN	shift 92
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 71:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+	expr : TOKEN_NOT expr .  (reduce by rule 47)
+
+	TOKEN_PLUS	reduce by rule 47
+	TOKEN_MINUS	reduce by rule 47
+	TOKEN_MULTIPLY	reduce by rule 47
+	TOKEN_DIVIDE	reduce by rule 47
+	TOKEN_MOD	reduce by rule 47
+	TOKEN_EQUAL	reduce by rule 47
+	TOKEN_NE	reduce by rule 47
+	TOKEN_GT	reduce by rule 47
+	TOKEN_GTE	reduce by rule 47
+	TOKEN_LT	reduce by rule 47
+	TOKEN_LTE	reduce by rule 47
+	TOKEN_AND	reduce by rule 47
+	TOKEN_OR	reduce by rule 47
+	TOKEN_THEN	reduce by rule 47
+	TOKEN_DO	reduce by rule 47
+	TOKEN_SEMICOLON	reduce by rule 47
+	TOKEN_RPAREN	reduce by rule 47
+	TOKEN_RPLUS	reduce by rule 47
+	TOKEN_RMINUS	reduce by rule 47
+	TOKEN_RMULTIPLY	reduce by rule 47
+	TOKEN_RDIVIDE	reduce by rule 47
+
+
+	.	error
+
+
+state 72:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : TOKEN_UMINUS expr .  (reduce by rule 37)
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 37
+	TOKEN_MINUS	reduce by rule 37
+	TOKEN_MULTIPLY	reduce by rule 37
+	TOKEN_DIVIDE	reduce by rule 37
+	TOKEN_MOD	reduce by rule 37
+	TOKEN_EQUAL	reduce by rule 37
+	TOKEN_NE	reduce by rule 37
+	TOKEN_GT	reduce by rule 37
+	TOKEN_GTE	reduce by rule 37
+	TOKEN_LT	reduce by rule 37
+	TOKEN_LTE	reduce by rule 37
+	TOKEN_AND	reduce by rule 37
+	TOKEN_OR	reduce by rule 37
+	TOKEN_THEN	reduce by rule 37
+	TOKEN_DO	reduce by rule 37
+	TOKEN_SEMICOLON	reduce by rule 37
+	TOKEN_RPAREN	reduce by rule 37
+	TOKEN_RPLUS	reduce by rule 37
+	TOKEN_RMINUS	reduce by rule 37
+	TOKEN_RMULTIPLY	reduce by rule 37
+	TOKEN_RDIVIDE	reduce by rule 37
+
+
+	.	error
+
+
+state 73:
+
+	command : TOKEN_IF expr TOKEN_THEN . cmdseq TOKEN_ELSE cmdseq TOKEN_ENDIF 
+
+	TOKEN_LBRACE	shift 16
+
+	cmdseq	goto 93
+
+	.	error
+
+
+state 74:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr TOKEN_RDIVIDE expr .  (reduce by rule 36)
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 36
+	TOKEN_MINUS	reduce by rule 36
+	TOKEN_MULTIPLY	reduce by rule 36
+	TOKEN_DIVIDE	reduce by rule 36
+	TOKEN_MOD	reduce by rule 36
+	TOKEN_EQUAL	reduce by rule 36
+	TOKEN_NE	reduce by rule 36
+	TOKEN_GT	reduce by rule 36
+	TOKEN_GTE	reduce by rule 36
+	TOKEN_LT	reduce by rule 36
+	TOKEN_LTE	reduce by rule 36
+	TOKEN_AND	reduce by rule 36
+	TOKEN_OR	reduce by rule 36
+	TOKEN_THEN	reduce by rule 36
+	TOKEN_DO	reduce by rule 36
+	TOKEN_SEMICOLON	reduce by rule 36
+	TOKEN_RPAREN	reduce by rule 36
+	TOKEN_RPLUS	reduce by rule 36
+	TOKEN_RMINUS	reduce by rule 36
+	TOKEN_RMULTIPLY	reduce by rule 36
+	TOKEN_RDIVIDE	reduce by rule 36
+
+
+	.	error
+
+
+state 75:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr TOKEN_RMULTIPLY expr .  (reduce by rule 35)
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 35
+	TOKEN_MINUS	reduce by rule 35
+	TOKEN_MULTIPLY	reduce by rule 35
+	TOKEN_DIVIDE	reduce by rule 35
+	TOKEN_MOD	reduce by rule 35
+	TOKEN_EQUAL	reduce by rule 35
+	TOKEN_NE	reduce by rule 35
+	TOKEN_GT	reduce by rule 35
+	TOKEN_GTE	reduce by rule 35
+	TOKEN_LT	reduce by rule 35
+	TOKEN_LTE	reduce by rule 35
+	TOKEN_AND	reduce by rule 35
+	TOKEN_OR	reduce by rule 35
+	TOKEN_THEN	reduce by rule 35
+	TOKEN_DO	reduce by rule 35
+	TOKEN_SEMICOLON	reduce by rule 35
+	TOKEN_RPAREN	reduce by rule 35
+	TOKEN_RPLUS	reduce by rule 35
+	TOKEN_RMINUS	reduce by rule 35
+	TOKEN_RMULTIPLY	reduce by rule 35
+	TOKEN_RDIVIDE	reduce by rule 35
+
+
+	.	error
+
+
+state 76:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr TOKEN_RMINUS expr .  (reduce by rule 34)
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 34
+	TOKEN_MINUS	reduce by rule 34
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 34
+	TOKEN_NE	reduce by rule 34
+	TOKEN_GT	reduce by rule 34
+	TOKEN_GTE	reduce by rule 34
+	TOKEN_LT	reduce by rule 34
+	TOKEN_LTE	reduce by rule 34
+	TOKEN_AND	reduce by rule 34
+	TOKEN_OR	reduce by rule 34
+	TOKEN_THEN	reduce by rule 34
+	TOKEN_DO	reduce by rule 34
+	TOKEN_SEMICOLON	reduce by rule 34
+	TOKEN_RPAREN	reduce by rule 34
+	TOKEN_RPLUS	reduce by rule 34
+	TOKEN_RMINUS	reduce by rule 34
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 77:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr TOKEN_RPLUS expr .  (reduce by rule 33)
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 33
+	TOKEN_MINUS	reduce by rule 33
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 33
+	TOKEN_NE	reduce by rule 33
+	TOKEN_GT	reduce by rule 33
+	TOKEN_GTE	reduce by rule 33
+	TOKEN_LT	reduce by rule 33
+	TOKEN_LTE	reduce by rule 33
+	TOKEN_AND	reduce by rule 33
+	TOKEN_OR	reduce by rule 33
+	TOKEN_THEN	reduce by rule 33
+	TOKEN_DO	reduce by rule 33
+	TOKEN_SEMICOLON	reduce by rule 33
+	TOKEN_RPAREN	reduce by rule 33
+	TOKEN_RPLUS	reduce by rule 33
+	TOKEN_RMINUS	reduce by rule 33
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 78:
+
+	command : TOKEN_WHILE expr TOKEN_DO cmdseq . TOKEN_OD 
+
+	TOKEN_OD	shift 94
+
+
+	.	error
+
+
+state 79:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+	expr : expr TOKEN_OR expr .  (reduce by rule 46)
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	shift 58
+	TOKEN_OR	reduce by rule 46
+	TOKEN_THEN	reduce by rule 46
+	TOKEN_DO	reduce by rule 46
+	TOKEN_SEMICOLON	reduce by rule 46
+	TOKEN_RPAREN	reduce by rule 46
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 80:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr TOKEN_AND expr .  (reduce by rule 45)
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	shift 64
+	TOKEN_NE	shift 63
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	reduce by rule 45
+	TOKEN_OR	reduce by rule 45
+	TOKEN_THEN	reduce by rule 45
+	TOKEN_DO	reduce by rule 45
+	TOKEN_SEMICOLON	reduce by rule 45
+	TOKEN_RPAREN	reduce by rule 45
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 81:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr TOKEN_LTE expr .  (reduce by rule 39)
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 39
+	TOKEN_NE	reduce by rule 39
+	TOKEN_GT	reduce by rule 39
+	TOKEN_GTE	reduce by rule 39
+	TOKEN_LT	reduce by rule 39
+	TOKEN_LTE	reduce by rule 39
+	TOKEN_AND	reduce by rule 39
+	TOKEN_OR	reduce by rule 39
+	TOKEN_THEN	reduce by rule 39
+	TOKEN_DO	reduce by rule 39
+	TOKEN_SEMICOLON	reduce by rule 39
+	TOKEN_RPAREN	reduce by rule 39
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 82:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr TOKEN_LT expr .  (reduce by rule 40)
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 40
+	TOKEN_NE	reduce by rule 40
+	TOKEN_GT	reduce by rule 40
+	TOKEN_GTE	reduce by rule 40
+	TOKEN_LT	reduce by rule 40
+	TOKEN_LTE	reduce by rule 40
+	TOKEN_AND	reduce by rule 40
+	TOKEN_OR	reduce by rule 40
+	TOKEN_THEN	reduce by rule 40
+	TOKEN_DO	reduce by rule 40
+	TOKEN_SEMICOLON	reduce by rule 40
+	TOKEN_RPAREN	reduce by rule 40
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 83:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr TOKEN_GTE expr .  (reduce by rule 41)
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 41
+	TOKEN_NE	reduce by rule 41
+	TOKEN_GT	reduce by rule 41
+	TOKEN_GTE	reduce by rule 41
+	TOKEN_LT	reduce by rule 41
+	TOKEN_LTE	reduce by rule 41
+	TOKEN_AND	reduce by rule 41
+	TOKEN_OR	reduce by rule 41
+	TOKEN_THEN	reduce by rule 41
+	TOKEN_DO	reduce by rule 41
+	TOKEN_SEMICOLON	reduce by rule 41
+	TOKEN_RPAREN	reduce by rule 41
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 84:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr TOKEN_GT expr .  (reduce by rule 42)
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 42
+	TOKEN_NE	reduce by rule 42
+	TOKEN_GT	reduce by rule 42
+	TOKEN_GTE	reduce by rule 42
+	TOKEN_LT	reduce by rule 42
+	TOKEN_LTE	reduce by rule 42
+	TOKEN_AND	reduce by rule 42
+	TOKEN_OR	reduce by rule 42
+	TOKEN_THEN	reduce by rule 42
+	TOKEN_DO	reduce by rule 42
+	TOKEN_SEMICOLON	reduce by rule 42
+	TOKEN_RPAREN	reduce by rule 42
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 85:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr TOKEN_NE expr .  (reduce by rule 44)
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 44
+	TOKEN_NE	reduce by rule 44
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	reduce by rule 44
+	TOKEN_OR	reduce by rule 44
+	TOKEN_THEN	reduce by rule 44
+	TOKEN_DO	reduce by rule 44
+	TOKEN_SEMICOLON	reduce by rule 44
+	TOKEN_RPAREN	reduce by rule 44
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 86:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr TOKEN_EQUAL expr .  (reduce by rule 43)
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	shift 69
+	TOKEN_MINUS	shift 68
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 43
+	TOKEN_NE	reduce by rule 43
+	TOKEN_GT	shift 62
+	TOKEN_GTE	shift 61
+	TOKEN_LT	shift 60
+	TOKEN_LTE	shift 59
+	TOKEN_AND	reduce by rule 43
+	TOKEN_OR	reduce by rule 43
+	TOKEN_THEN	reduce by rule 43
+	TOKEN_DO	reduce by rule 43
+	TOKEN_SEMICOLON	reduce by rule 43
+	TOKEN_RPAREN	reduce by rule 43
+	TOKEN_RPLUS	shift 55
+	TOKEN_RMINUS	shift 54
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 87:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr TOKEN_MOD expr .  (reduce by rule 31)
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 31
+	TOKEN_MINUS	reduce by rule 31
+	TOKEN_MULTIPLY	reduce by rule 31
+	TOKEN_DIVIDE	reduce by rule 31
+	TOKEN_MOD	reduce by rule 31
+	TOKEN_EQUAL	reduce by rule 31
+	TOKEN_NE	reduce by rule 31
+	TOKEN_GT	reduce by rule 31
+	TOKEN_GTE	reduce by rule 31
+	TOKEN_LT	reduce by rule 31
+	TOKEN_LTE	reduce by rule 31
+	TOKEN_AND	reduce by rule 31
+	TOKEN_OR	reduce by rule 31
+	TOKEN_THEN	reduce by rule 31
+	TOKEN_DO	reduce by rule 31
+	TOKEN_SEMICOLON	reduce by rule 31
+	TOKEN_RPAREN	reduce by rule 31
+	TOKEN_RPLUS	reduce by rule 31
+	TOKEN_RMINUS	reduce by rule 31
+	TOKEN_RMULTIPLY	reduce by rule 31
+	TOKEN_RDIVIDE	reduce by rule 31
+
+
+	.	error
+
+
+state 88:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr TOKEN_DIVIDE expr .  (reduce by rule 30)
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 30
+	TOKEN_MINUS	reduce by rule 30
+	TOKEN_MULTIPLY	reduce by rule 30
+	TOKEN_DIVIDE	reduce by rule 30
+	TOKEN_MOD	reduce by rule 30
+	TOKEN_EQUAL	reduce by rule 30
+	TOKEN_NE	reduce by rule 30
+	TOKEN_GT	reduce by rule 30
+	TOKEN_GTE	reduce by rule 30
+	TOKEN_LT	reduce by rule 30
+	TOKEN_LTE	reduce by rule 30
+	TOKEN_AND	reduce by rule 30
+	TOKEN_OR	reduce by rule 30
+	TOKEN_THEN	reduce by rule 30
+	TOKEN_DO	reduce by rule 30
+	TOKEN_SEMICOLON	reduce by rule 30
+	TOKEN_RPAREN	reduce by rule 30
+	TOKEN_RPLUS	reduce by rule 30
+	TOKEN_RMINUS	reduce by rule 30
+	TOKEN_RMULTIPLY	reduce by rule 30
+	TOKEN_RDIVIDE	reduce by rule 30
+
+
+	.	error
+
+
+state 89:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr TOKEN_MULTIPLY expr .  (reduce by rule 29)
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 29
+	TOKEN_MINUS	reduce by rule 29
+	TOKEN_MULTIPLY	reduce by rule 29
+	TOKEN_DIVIDE	reduce by rule 29
+	TOKEN_MOD	reduce by rule 29
+	TOKEN_EQUAL	reduce by rule 29
+	TOKEN_NE	reduce by rule 29
+	TOKEN_GT	reduce by rule 29
+	TOKEN_GTE	reduce by rule 29
+	TOKEN_LT	reduce by rule 29
+	TOKEN_LTE	reduce by rule 29
+	TOKEN_AND	reduce by rule 29
+	TOKEN_OR	reduce by rule 29
+	TOKEN_THEN	reduce by rule 29
+	TOKEN_DO	reduce by rule 29
+	TOKEN_SEMICOLON	reduce by rule 29
+	TOKEN_RPAREN	reduce by rule 29
+	TOKEN_RPLUS	reduce by rule 29
+	TOKEN_RMINUS	reduce by rule 29
+	TOKEN_RMULTIPLY	reduce by rule 29
+	TOKEN_RDIVIDE	reduce by rule 29
+
+
+	.	error
+
+
+state 90:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr TOKEN_MINUS expr .  (reduce by rule 28)
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 28
+	TOKEN_MINUS	reduce by rule 28
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 28
+	TOKEN_NE	reduce by rule 28
+	TOKEN_GT	reduce by rule 28
+	TOKEN_GTE	reduce by rule 28
+	TOKEN_LT	reduce by rule 28
+	TOKEN_LTE	reduce by rule 28
+	TOKEN_AND	reduce by rule 28
+	TOKEN_OR	reduce by rule 28
+	TOKEN_THEN	reduce by rule 28
+	TOKEN_DO	reduce by rule 28
+	TOKEN_SEMICOLON	reduce by rule 28
+	TOKEN_RPAREN	reduce by rule 28
+	TOKEN_RPLUS	reduce by rule 28
+	TOKEN_RMINUS	reduce by rule 28
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 91:
+
+	expr : expr . TOKEN_PLUS expr 
+	expr : expr TOKEN_PLUS expr .  (reduce by rule 27)
+	expr : expr . TOKEN_MINUS expr 
+	expr : expr . TOKEN_MULTIPLY expr 
+	expr : expr . TOKEN_DIVIDE expr 
+	expr : expr . TOKEN_MOD expr 
+	expr : expr . TOKEN_RPLUS expr 
+	expr : expr . TOKEN_RMINUS expr 
+	expr : expr . TOKEN_RMULTIPLY expr 
+	expr : expr . TOKEN_RDIVIDE expr 
+	expr : expr . TOKEN_LTE expr 
+	expr : expr . TOKEN_LT expr 
+	expr : expr . TOKEN_GTE expr 
+	expr : expr . TOKEN_GT expr 
+	expr : expr . TOKEN_EQUAL expr 
+	expr : expr . TOKEN_NE expr 
+	expr : expr . TOKEN_AND expr 
+	expr : expr . TOKEN_OR expr 
+
+	TOKEN_PLUS	reduce by rule 27
+	TOKEN_MINUS	reduce by rule 27
+	TOKEN_MULTIPLY	shift 67
+	TOKEN_DIVIDE	shift 66
+	TOKEN_MOD	shift 65
+	TOKEN_EQUAL	reduce by rule 27
+	TOKEN_NE	reduce by rule 27
+	TOKEN_GT	reduce by rule 27
+	TOKEN_GTE	reduce by rule 27
+	TOKEN_LT	reduce by rule 27
+	TOKEN_LTE	reduce by rule 27
+	TOKEN_AND	reduce by rule 27
+	TOKEN_OR	reduce by rule 27
+	TOKEN_THEN	reduce by rule 27
+	TOKEN_DO	reduce by rule 27
+	TOKEN_SEMICOLON	reduce by rule 27
+	TOKEN_RPAREN	reduce by rule 27
+	TOKEN_RPLUS	reduce by rule 27
+	TOKEN_RMINUS	reduce by rule 27
+	TOKEN_RMULTIPLY	shift 53
+	TOKEN_RDIVIDE	shift 52
+
+
+	.	error
+
+
+state 92:
+
+	expr : TOKEN_LPAREN expr TOKEN_RPAREN .  (reduce by rule 26)
+
+	TOKEN_PLUS	reduce by rule 26
+	TOKEN_MINUS	reduce by rule 26
+	TOKEN_MULTIPLY	reduce by rule 26
+	TOKEN_DIVIDE	reduce by rule 26
+	TOKEN_MOD	reduce by rule 26
+	TOKEN_EQUAL	reduce by rule 26
+	TOKEN_NE	reduce by rule 26
+	TOKEN_GT	reduce by rule 26
+	TOKEN_GTE	reduce by rule 26
+	TOKEN_LT	reduce by rule 26
+	TOKEN_LTE	reduce by rule 26
+	TOKEN_AND	reduce by rule 26
+	TOKEN_OR	reduce by rule 26
+	TOKEN_THEN	reduce by rule 26
+	TOKEN_DO	reduce by rule 26
+	TOKEN_SEMICOLON	reduce by rule 26
+	TOKEN_RPAREN	reduce by rule 26
+	TOKEN_RPLUS	reduce by rule 26
+	TOKEN_RMINUS	reduce by rule 26
+	TOKEN_RMULTIPLY	reduce by rule 26
+	TOKEN_RDIVIDE	reduce by rule 26
+
+
+	.	error
+
+
+state 93:
+
+	command : TOKEN_IF expr TOKEN_THEN cmdseq . TOKEN_ELSE cmdseq TOKEN_ENDIF 
+
+	TOKEN_ELSE	shift 95
+
+
+	.	error
+
+
+state 94:
+
+	command : TOKEN_WHILE expr TOKEN_DO cmdseq TOKEN_OD .  (reduce by rule 24)
+
+	TOKEN_SEMICOLON	reduce by rule 24
+
+
+	.	error
+
+
+state 95:
+
+	command : TOKEN_IF expr TOKEN_THEN cmdseq TOKEN_ELSE . cmdseq TOKEN_ENDIF 
+
+	TOKEN_LBRACE	shift 16
+
+	cmdseq	goto 96
+
+	.	error
+
+
+state 96:
+
+	command : TOKEN_IF expr TOKEN_THEN cmdseq TOKEN_ELSE cmdseq . TOKEN_ENDIF 
+
+	TOKEN_ENDIF	shift 97
+
+
+	.	error
+
+
+state 97:
+
+	command : TOKEN_IF expr TOKEN_THEN cmdseq TOKEN_ELSE cmdseq TOKEN_ENDIF .  (reduce by rule 23)
+
+	TOKEN_SEMICOLON	reduce by rule 23
+
+
+	.	error
+
+
+state 98:
+
+
+	TOKEN_EOF	accept
+
+
+	.	error
+
+667 of 961 action table entries left after compaction
+54 goto table entries
