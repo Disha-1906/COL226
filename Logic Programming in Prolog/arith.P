@@ -1,0 +1,29 @@
+evaluate([],_,Sum,Sum).
+evaluate([H|T],Op,Sum,Val) :-
+    (    integer(H) ->(Op=add ->NewVal is Sum+H, evaluate(T,Op,NewVal,Val);
+                  NewVal is Sum-H,evaluate(T,Op,NewVal,Val));
+    (   H = + -> evaluate(T,add,Sum,Val);
+    evaluate(T,sub,Sum,Val))).
+break_list([],_,M,N,M,N).
+break_list([H|T],B,M,N,M1,N1):-
+    (   H = = -> break_list(T,true,M,N,M1,N1);
+        B = true ->  append(N,[H],NewN), break_list(T,true,M,NewN,M1,N1) ;  append(M,[H],NewM), break_list(T,false,NewM,N,M1,N1) ).
+combine([H],[],_,X,Final):- append(X,[H],Final).
+combine([H1|L1],[H2|L2],Bool,Final,Tem):-(Bool = true -> append(Final,[H1],Temp),combine(L1,[H2|L2],false,Temp,Tem);append(Final,[H2],F),combine([H1|L1],L2,true,F,Tem)).
+
+create_op(L,Op,Return) :- (L=1 -> Return=Op;
+                   select(P1,[+,-,=],_),append(Op,[P1],NewOp),LNew is L-1,create_op(LNew,NewOp,Return)).
+valid_op([],Count):- Count<2,Count>0.
+valid_op([H|T],Count) :-
+    (  H= = -> NewCount is Count + 1, valid_op(T,NewCount); valid_op(T,Count)).
+tostring(M,N,S):- append(M,[=],X),append(X,N,Result),atomic_list_concat(Result,'',Atom1),atom_string(Atom1,S).
+valid_eq(L1,L2) :- evaluate(L1,add,0,Val1),evaluate(L2,add,0,Val2),Val1=Val2.
+arith([]):- write('Empty List'),!.
+arith(L):-
+    length(L,Length),
+    create_op(Length,[],Result),
+    valid_op(Result,0),
+    combine(L,Result,true,[],Temporary),
+    break_list(Temporary,false,[],[],M,N),
+    valid_eq(M,N),
+    tostring(M,N,X),write(X),!.

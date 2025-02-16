@@ -1,0 +1,64 @@
+end_state([[],[alice,bob,carol,davis]]).
+
+construct_canoe([L, _], true, Canoe) :-
+    select(Paddler, L, Remain),
+    select(Person, Remain, _),
+    Canoe = [[Paddler, Person],left_to_right].
+construct_canoe([_, Right], false, Canoe) :-
+    select(Paddler, Right, _),
+    Canoe = [[Paddler],right_to_left].
+
+correct_canoe(CurrState,Canoe):-
+    nth0(0,CurrState,LBank),nth0(1,CurrState,RBank),
+    (   Canoe = [[Paddler,Person],left_to_right] -> subset([Paddler,Person],LBank),
+                                          ((Paddler=bob,Person=carol);Paddler=carol;Paddler=davis);
+        Canoe = [[Paddler],right_to_left] -> subset([Paddler],RBank),
+                                          (Paddler=bob;Paddler=alice; Paddler=carol; Paddler=davis)).
+
+flow([LBank,RBank],[Canoeists,left_to_right],NewState) :- subtract(LBank,Canoeists,NLBank),
+                                                append(Canoeists,RBank,NRBank),
+                                                NewState = [NLBank,NRBank].
+flow([LBank,RBank],[Canoeists,right_to_left],NewState) :- subtract(RBank,Canoeists,NRBank),
+                                                append(Canoeists,LBank,NLBank),
+                                                NewState = [NLBank,NRBank].
+
+
+paddler_count([[Paddler|_],_],[A,B,C,D],NCount) :-
+    (   Paddler = alice -> NewA is A+1 , NCount = [NewA,B,C,D];
+        Paddler = bob -> NewB is B+1, NCount = [A,NewB,C,D];
+        Paddler = carol -> NewC is C+1, NCount = [A,B,NewC,D];
+        Paddler = davis -> NewD is D+1, NCount = [A,B,C,NewD]).
+
+valid_route([],[A,B,C,D],[A,B,C,D]) :- A>0, B>0, C>0, D>0.
+valid_route([Canoe|Route],L,[A1,B1,C1,D1]) :- paddler_count(Canoe,L,NewL),valid_route(Route,NewL,[A1,B1,C1,D1]).
+
+explore(CurrState,Route,_,_,Route):-
+    end_state(CurrState),
+    valid_route(Route,[0,0,0,0],_),
+    write(Route),nl.
+
+explore(CurrState,Route,PrevStates,Flag,P) :-
+    \+ member(CurrState,PrevStates),
+    construct_canoe(CurrState,Flag,Canoe),
+    correct_canoe(CurrState,Canoe),
+    flow(CurrState,Canoe,[NewL,NewR]),
+    sort(NewL,FinalL),
+    sort(NewR,FinalR),
+    NextState = [FinalL,FinalR],
+    append(PrevStates,CurrState,NewPrevStates),
+    (   Flag = true -> NewFlag = false; NewFlag = true),
+    explore(NextState,[Canoe|Route],NewPrevStates,NewFlag,P).
+
+peddle_twice(L):- valid_route(L,[0,0,0,0],[A,B,C,D]),(A = 2 -> write('Alice paddled twice'); B = 2 -> write('Bob paddled twice'); C = 2 -> write('Carol paddled twice'); D = 2 -> write('Davis paddled twice')).
+
+abcd() :- explore([[alice,bob,carol,davis],[]],[],[],true,P),peddle_twice(P).
+
+
+
+
+
+
+
+
+
+

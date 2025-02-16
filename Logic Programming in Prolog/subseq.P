@@ -1,0 +1,4 @@
+subsequence([],[]).
+subsequence([Head|Subset],[Head|Tail]) :- subsequence(Subset,Tail).
+subsequence(Subset,[_|Tail]) :- subsequence(Subset,Tail).
+
